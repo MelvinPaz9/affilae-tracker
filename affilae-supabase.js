@@ -1,7 +1,6 @@
 (async function () {
   console.log("[Affilae] Script démarré ✅");
 
-  // Récupération AECID depuis URL, localStorage ou cookies
   function getParam(name) {
     try {
       return new URLSearchParams(location.search).get(name);
@@ -26,7 +25,6 @@
   }
   console.log("[Affilae] AECID détecté :", AECID);
 
-  // Fonction pour trouver l'email dans un <h2>
   function findEmailInPage() {
     const h2s = document.querySelectorAll("h2");
     for (let i = 0; i < h2s.length; i++) {
@@ -38,25 +36,23 @@
     return null;
   }
 
-  // Charger Supabase si nécessaire
+  // ✅ Charger Supabase en version UMD (pour navigateur)
   if (typeof window.supabase === "undefined") {
     await new Promise((resolve, reject) => {
       const script = document.createElement("script");
-      script.src = "https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm";
-      script.type = "module";
+      script.src = "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.42.3/dist/umd/supabase.min.js";
       script.onload = resolve;
       script.onerror = reject;
       document.head.appendChild(script);
     });
   }
 
-  // Initialiser Supabase
+  // Initialisation
   const supabase = window.supabase.createClient(
     "https://ynrjocozcnuhfntxrhao.supabase.co",
     "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlucmpvY296Y251aGZudHhyaGFvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTgwNTkyOTcsImV4cCI6MjA3MzYzNTI5N30.Jp0cmDUVBsjy-xOqo5rjPMYZZMKvnMH4eOtU_ahVoIY"
   );
 
-  // Attendre que l'email apparaisse dans le DOM
   let tries = 0, maxTries = 20;
   (function tick() {
     const email = findEmailInPage();
@@ -69,7 +65,6 @@
     }
   })();
 
-  // Insertion dans Supabase
   async function insertIntoSupabase(email) {
     const { data, error } = await supabase
       .from("affilae_bridge_by_email")
