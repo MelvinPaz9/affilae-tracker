@@ -73,7 +73,7 @@
     if (error) {
       console.error("[Affilae] Erreur lors de l'envoi ❌", error);
     } else {
-      console.log("[Affilae] Données envoyées à Supabase ✅", data);
+      console.log("[Affilaee] Données envoyées à Supabase ✅", data);
     }
   }
 })();
